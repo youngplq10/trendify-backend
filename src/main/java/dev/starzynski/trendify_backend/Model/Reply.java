@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Document(collection = "posts")
-public class Post {
+@Document(collection = "replies")
+public class Reply {
     @Id
     private ObjectId id;
 
@@ -22,7 +22,11 @@ public class Post {
     @JsonIgnoreProperties({"posts", "replies", "followers", "following", "likes"})
     private User user;
 
-    public Post() {
+    @DBRef
+    @JsonIgnoreProperties({"likes", "replies"})
+    private Post post;
+
+    public Reply() {
         this.id = new ObjectId();
         this.createdAtDate = new Date();
 
@@ -40,8 +44,11 @@ public class Post {
 
     public String getUnique() { return unique; }
 
-    public Date getCreatedAtDate() { return createdAtDate; }
-
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
+    public Post getPost() { return post; }
+    public void setPost(Post post) { this.post = post; }
+
+    public Date getCreatedAtDate() { return createdAtDate; }
 }

@@ -1,10 +1,14 @@
 package dev.starzynski.trendify_backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "users")
 public class User {
@@ -17,11 +21,16 @@ public class User {
 
     private Date createdAtDate;
 
+    @DBRef
+    @JsonIgnoreProperties("user")
+    private List<Post> posts;
+
     public User() {
         this.id = new ObjectId();
         this.newsletter = false;
         this.role = "USER";
         this.createdAtDate = new Date();
+        this.posts = new ArrayList<>();
     }
 
     public ObjectId getId() { return id; }
@@ -44,4 +53,6 @@ public class User {
     public void setNewsletter(Boolean newsletter) { this.newsletter = newsletter; }
 
     public Date getCreatedAtDate() { return createdAtDate; }
+
+    public List<Post> getPosts() { return posts; }
 }
