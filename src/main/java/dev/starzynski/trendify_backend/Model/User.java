@@ -4,6 +4,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Document(collection = "users")
 public class User {
     @Id
@@ -13,10 +15,13 @@ public class User {
 
     private Boolean newsletter;
 
+    private Date createdAtDate;
+
     public User() {
         this.id = new ObjectId();
         this.newsletter = false;
         this.role = "USER";
+        this.createdAtDate = new Date();
     }
 
     public ObjectId getId() { return id; }
@@ -37,4 +42,6 @@ public class User {
 
     public Boolean getNewsletter() { return newsletter; }
     public void setNewsletter(Boolean newsletter) { this.newsletter = newsletter; }
+
+    public Date getCreatedAtDate() { return createdAtDate; }
 }
