@@ -25,6 +25,21 @@ public class User {
     @JsonIgnoreProperties("user")
     private List<Post> posts;
 
+    @DBRef
+    @JsonIgnoreProperties({"posts", "replies", "followers", "following", "likes"})
+    private List<User> followers;
+
+    @DBRef
+    @JsonIgnoreProperties({"posts", "replies", "followers", "following", "likes"})
+    private List<User> following;
+
+    @DBRef
+    @JsonIgnoreProperties({"replies"})
+    private List<Post> likes;
+
+    @DBRef
+    private List<Reply> replies;
+
     public User() {
         this.id = new ObjectId();
         this.newsletter = false;
