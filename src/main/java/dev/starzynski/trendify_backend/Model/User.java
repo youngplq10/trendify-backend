@@ -9,13 +9,14 @@ public class User {
     @Id
     private ObjectId id;
 
-    private String username, email, password, profilePicture;
+    private String username, email, password, profilePicture, role;
 
     private Boolean newsletter;
 
     public User() {
         this.id = new ObjectId();
         this.newsletter = false;
+        this.role = "USER";
     }
 
     public ObjectId getId() { return id; }
@@ -31,6 +32,8 @@ public class User {
 
     public String getProfilePicture() { return profilePicture; }
     public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
+
+    public String getRole() { return role; }
 
     public Boolean getNewsletter() { return newsletter; }
     public void setNewsletter(Boolean newsletter) { this.newsletter = newsletter; }
