@@ -33,24 +33,24 @@ public class UserService {
             if (existingUsername.isPresent()) {
                 return ResponseEntity
                         .status(HttpStatus.CONFLICT)
-                        .body(Collections.singletonMap("message", "This username is already in use."));
+                        .body(Collections.singletonMap("error", "This username is already in use."));
             }
             if (existingEmail.isPresent()) {
                 return ResponseEntity
                         .status(HttpStatus.CONFLICT)
-                        .body(Collections.singletonMap("message", "This e-mail is already in use."));
+                        .body(Collections.singletonMap("error", "This e-mail is already in use."));
             }
 
             userRepository.insert(user);
 
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(Collections.singletonMap("message", jwtService.generateToken(user.getUsername())));
+                    .body(Collections.singletonMap("jwt", jwtService.generateToken(user.getUsername())));
         } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.singletonMap("message", "Server error. Please try again."));
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
 
@@ -63,16 +63,16 @@ public class UserService {
             if (authentication.isAuthenticated()) {
                 return ResponseEntity
                         .status(HttpStatus.OK)
-                        .body(Collections.singletonMap("message", jwtService.generateToken(user.getUsername())));
+                        .body(Collections.singletonMap("jwt", jwtService.generateToken(user.getUsername())));
             }
         } catch (AuthenticationException e) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body(Collections.singletonMap("message", "Failed to log in. Please try again."));
+                    .body(Collections.singletonMap("error", "Failed to log in. Please try again."));
         }
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Collections.singletonMap("message", "Server error. Please try again."));
+                .body(Collections.singletonMap("error", "Server error. Please try again."));
     }
 }
