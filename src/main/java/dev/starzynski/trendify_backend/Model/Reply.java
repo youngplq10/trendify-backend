@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Document(collection = "replies")
 public class Reply {
@@ -26,9 +28,14 @@ public class Reply {
     @JsonIgnoreProperties({"likes", "replies"})
     private Post post;
 
+    @DBRef
+    @JsonIgnoreProperties({"following", "followers", "likedPosts", "likedReplies"})
+    private Set<User> likes;
+
     public Reply() {
         this.id = new ObjectId();
         this.createdAtDate = new Date();
+        this.likes = new HashSet<>();
 
         GenerateRandomStringService generateRandomStringService = new GenerateRandomStringService();
         this.unique = generateRandomStringService.generateRandom(15);
@@ -51,4 +58,6 @@ public class Reply {
     public void setPost(Post post) { this.post = post; }
 
     public Date getCreatedAtDate() { return createdAtDate; }
+
+    public Set<User> getLikes() { return likes; }
 }

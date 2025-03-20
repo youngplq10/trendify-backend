@@ -69,4 +69,86 @@ public class ReplyService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
+
+    public ResponseEntity<?> likeReply(String jwt, String replyUnique) {
+        try {
+            String username = jwtService.extractUsername(jwt);
+
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+
+            Optional<Reply> optionalReply = replyRepository.findByUnique(replyUnique);
+
+            if (optionalUser.isEmpty() || optionalReply.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Failed in liking reply. Please try again."));
+            }
+
+            User user = optionalUser.get();
+            Reply reply = optionalReply.get();
+
+            boolean alreadyLiked = reply.getLikes().stream()
+                    .anyMatch(likedUser -> likedUser.getId().equals(user.getId()));
+
+            if (alreadyLiked) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "You already liked this reply."));
+            }
+
+            reply.getLikes().add(user);
+            replyRepository.save(reply);
+
+            user.getLikedReplies().add(reply);
+            userRepository.save(user);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Collections.singletonMap("message", "Liked."));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
+
+    public ResponseEntity<?> unlikeReply(String jwt, String replyUnique) {
+        try {
+            String username = jwtService.extractUsername(jwt);
+
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+
+            Optional<Reply> optionalReply = replyRepository.findByUnique(replyUnique);
+
+            if (optionalUser.isEmpty() || optionalReply.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Failed in unliking reply. Please try again."));
+            }
+
+            User user = optionalUser.get();
+            Reply reply = optionalReply.get();
+
+            boolean alreadyLiked = reply.getLikes().stream()
+                    .anyMatch(likedReply -> likedReply.getId().equals(user.getId()));
+
+            if (!alreadyLiked) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "You haven't liked this reply yet."));
+            }
+
+            reply.getLikes().removeIf(likedUser -> likedUser.getId().equals(user.getId()));
+            replyRepository.save(reply);
+
+            user.getLikedReplies().removeIf(likedReply -> likedReply.getId().equals(reply.getId()));
+            userRepository.save(user);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Collections.singletonMap("message", "Unliked."));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
 }

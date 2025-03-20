@@ -18,4 +18,14 @@ public class ReplyController {
     public ResponseEntity<?> createReply(@RequestPart String postUnique, @RequestPart String jwt, @RequestPart(value = "image", required = false) String image, @RequestPart String content) {
         return replyService.createReply(postUnique, jwt, image, content);
     }
+
+    @PostMapping("/auth/reply/like")
+    public ResponseEntity<?> likeReply(@RequestPart String jwt, @RequestPart String replyUnique) {
+        return replyService.likeReply(jwt, replyUnique);
+    }
+
+    @PostMapping("/auth/reply/unlike")
+    public ResponseEntity<?> unlikeReply(@RequestPart String jwt, @RequestPart String replyUnique) {
+        return replyService.unlikeReply(jwt, replyUnique);
+    }
 }
