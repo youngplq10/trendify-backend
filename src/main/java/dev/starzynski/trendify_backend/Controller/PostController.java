@@ -25,4 +25,9 @@ public class PostController {
     public ResponseEntity<?> likePost(@RequestPart String jwt, @RequestPart String postUnique) {
         return postService.likePost(jwt, postUnique);
     }
+
+    @PostMapping("/auth/post/unlike")
+    public ResponseEntity<?> unlikePost(@RequestPart String jwt, @RequestPart String postUnique) {
+        return postService.unlikePost(jwt, postUnique);
+    }
 }
