@@ -35,7 +35,10 @@ public class User {
 
     @DBRef
     @JsonIgnoreProperties({"replies"})
-    private List<Post> likes;
+    private List<Post> likedPosts;
+
+    @DBRef
+    private List<Reply> likedReplies;
 
     @DBRef
     private List<Reply> replies;
@@ -45,7 +48,12 @@ public class User {
         this.newsletter = false;
         this.role = "USER";
         this.createdAtDate = new Date();
+        this.followers = new ArrayList<>();
+        this.following = new ArrayList<>();
         this.posts = new ArrayList<>();
+        this.replies = new ArrayList<>();
+        this.likedPosts = new ArrayList<>();
+        this.likedReplies = new ArrayList<>();
     }
 
     public ObjectId getId() { return id; }
@@ -69,5 +77,15 @@ public class User {
 
     public Date getCreatedAtDate() { return createdAtDate; }
 
+    public List<User> getFollowers() { return followers; }
+
+    public List<User> getFollowing() { return following; }
+
     public List<Post> getPosts() { return posts; }
+
+    public List<Reply> getReplies() { return replies; }
+
+    public List<Post> getLikedPosts() { return likedPosts; }
+
+    public List<Reply> getLikedReplies() { return likedReplies; }
 }
