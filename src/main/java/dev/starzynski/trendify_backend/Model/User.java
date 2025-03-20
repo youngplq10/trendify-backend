@@ -6,9 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Document(collection = "users")
 public class User {
@@ -35,7 +33,7 @@ public class User {
 
     @DBRef
     @JsonIgnoreProperties({"replies"})
-    private List<Post> likedPosts;
+    private Set<Post> likedPosts;
 
     @DBRef
     private List<Reply> likedReplies;
@@ -52,7 +50,7 @@ public class User {
         this.following = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.replies = new ArrayList<>();
-        this.likedPosts = new ArrayList<>();
+        this.likedPosts = new HashSet<>();
         this.likedReplies = new ArrayList<>();
     }
 
@@ -85,7 +83,7 @@ public class User {
 
     public List<Reply> getReplies() { return replies; }
 
-    public List<Post> getLikedPosts() { return likedPosts; }
+    public Set<Post> getLikedPosts() { return likedPosts; }
 
     public List<Reply> getLikedReplies() { return likedReplies; }
 }

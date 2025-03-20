@@ -7,9 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Document(collection = "posts")
 public class Post {
@@ -30,14 +28,14 @@ public class Post {
 
     @DBRef
     @JsonIgnoreProperties
-    private List<User> likes;
+    private Set<User> likes;
 
     public Post() {
         this.id = new ObjectId();
         this.createdAtDate = new Date();
 
         this.replies = new ArrayList<>();
-        this.likes = new ArrayList<>();
+        this.likes = new HashSet<>();
 
         GenerateRandomStringService generateRandomStringService = new GenerateRandomStringService();
         this.unique = generateRandomStringService.generateRandom(15);
@@ -59,5 +57,5 @@ public class Post {
     public void setUser(User user) { this.user = user; }
 
     public List<Reply> getReplies() { return replies; }
-    public List<User> getLikes() { return likes; }
+    public Set<User> getLikes() { return likes; }
 }

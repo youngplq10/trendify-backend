@@ -58,4 +58,45 @@ public class PostService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
+
+    public ResponseEntity<?> likePost(String jwt, String postUnique) {
+        try {
+            String username = jwtService.extractUsername(jwt);
+
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+
+            Optional<Post> optionalPost = postRepository.findByUnique(postUnique);
+
+            if (optionalUser.isEmpty() || optionalPost.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Failed in liking post. Please try again."));
+            }
+
+            User user = optionalUser.get();
+            Post post = optionalPost.get();
+
+            boolean alreadyLiked = post.getLikes().stream()
+                    .anyMatch(likedUser -> likedUser.getId().equals(user.getId()));
+
+            if (alreadyLiked) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "You already liked this post."));
+            }
+
+            post.getLikes().add(user);
+            postRepository.save(post);
+
+            user.getLikedPosts().add(post);
+            userRepository.save(user);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Collections.singletonMap("message", "Liked."));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
 }

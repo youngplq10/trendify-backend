@@ -20,4 +20,9 @@ public class PostController {
     public ResponseEntity<?> createPost(@RequestPart String jwt, @RequestPart(value = "image", required = false) String image, @RequestPart String content) {
         return postService.createPost(content, image, jwt);
     }
+
+    @PostMapping("/auth/post/like")
+    public ResponseEntity<?> likePost(@RequestPart String jwt, @RequestPart String postUnique) {
+        return postService.likePost(jwt, postUnique);
+    }
 }
