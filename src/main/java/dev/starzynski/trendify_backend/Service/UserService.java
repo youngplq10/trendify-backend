@@ -5,6 +5,10 @@ import dev.starzynski.trendify_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -17,6 +21,9 @@ public class UserService {
 
     @Autowired
     private JWTService jwtService;
+
+    @Autowired
+    private AuthenticationManager authManager;
 
     public ResponseEntity<?> createUser(User user) {
         try {
@@ -45,5 +52,27 @@ public class UserService {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("message", "Server error. Please try again."));
         }
+    }
+
+    public ResponseEntity<?> loginUser(User user) {
+        try {
+            Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+            );
+
+            if (authentication.isAuthenticated()) {
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(Collections.singletonMap("message", jwtService.generateToken(user.getUsername())));
+            }
+        } catch (AuthenticationException e) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("message", "Failed to log in. Please try again."));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Collections.singletonMap("message", "Server error. Please try again."));
     }
 }
