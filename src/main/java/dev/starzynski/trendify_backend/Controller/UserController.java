@@ -33,4 +33,10 @@ public class UserController {
     public ResponseEntity<?> followUser(@RequestPart String jwt, @RequestPart String targetUsername) {
         return userService.followUser(jwt, targetUsername);
     }
+
+    @PostMapping("/auth/user/unfollow")
+    @Operation(summary = "Unfollow user", description = "Returns message")
+    public ResponseEntity<?> unfollowUser(@RequestPart String jwt, @RequestPart String targetUsername) {
+        return userService.unfollowUser(jwt, targetUsername);
+    }
 }

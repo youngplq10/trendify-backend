@@ -116,4 +116,45 @@ public class UserService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
+
+    public ResponseEntity<?> unfollowUser(String jwt, String targetUsername) {
+        try {
+            String username = jwtService.extractUsername(jwt);
+
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+            Optional<User> optionalTarget = userRepository.findByUsername(targetUsername);
+
+            if (optionalUser.isEmpty() || optionalTarget.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Failed to follow user. Please try again."));
+            }
+
+            User user = optionalUser.get();
+            User target = optionalTarget.get();
+
+            boolean alreadyFollowing = user.getFollowing().stream()
+                    .anyMatch(followingUser -> followingUser.getUsername().equals(target.getUsername()));
+
+            if (!alreadyFollowing) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "You haven't followed this user yet."));
+            }
+
+            user.getFollowing().removeIf(followedUser -> followedUser.getUsername().equals(target.getUsername()));
+            userRepository.save(user);
+
+            target.getFollowers().removeIf(followingUser -> followingUser.getUsername().equals(user.getUsername()));
+            userRepository.save(target);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Collections.singletonMap("message", "Unfollowed!"));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
 }
