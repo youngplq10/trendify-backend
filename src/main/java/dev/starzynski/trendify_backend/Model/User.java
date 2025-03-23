@@ -1,6 +1,7 @@
 package dev.starzynski.trendify_backend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import dev.starzynski.trendify_backend.Service.GenerateRandomStringService;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -13,7 +14,7 @@ public class User {
     @Id
     private ObjectId id;
 
-    private String username, email, password, profilePicture, role;
+    private String username, email, password, profilePicture, role, unique;
 
     private Boolean newsletter;
 
@@ -52,6 +53,9 @@ public class User {
         this.replies = new ArrayList<>();
         this.likedPosts = new HashSet<>();
         this.likedReplies = new ArrayList<>();
+
+        GenerateRandomStringService generateRandomStringService = new GenerateRandomStringService();
+        this.unique = generateRandomStringService.generateRandom(15);
     }
 
     public ObjectId getId() { return id; }
@@ -86,4 +90,6 @@ public class User {
     public Set<Post> getLikedPosts() { return likedPosts; }
 
     public List<Reply> getLikedReplies() { return likedReplies; }
+
+    public String getUnique() { return unique; }
 }
