@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api")
@@ -31,5 +28,9 @@ public class UserController {
         return userService.loginUser(user);
     }
 
-
+    @PostMapping("/auth/user/follow")
+    @Operation(summary = "Follow user", description = "Returns message")
+    public ResponseEntity<?> followUser(@RequestPart String jwt, @RequestPart String targetUsername) {
+        return userService.followUser(jwt, targetUsername);
+    }
 }
