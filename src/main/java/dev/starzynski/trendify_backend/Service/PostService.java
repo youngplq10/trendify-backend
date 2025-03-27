@@ -11,6 +11,8 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -136,6 +138,18 @@ public class PostService {
                     .status(HttpStatus.OK)
                     .body(Collections.singletonMap("message", "Unliked"));
 
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
+
+    public ResponseEntity<?> getAllPosts() {
+        try {
+            return ResponseEntity
+                    .status(200)
+                    .body(Collections.singletonMap("posts", postRepository.findAllByOrderByCreatedAtDateDesc()));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)

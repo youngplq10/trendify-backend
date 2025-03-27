@@ -18,7 +18,7 @@ public class UserController {
 
     @PostMapping("/public/user/create")
     @Operation(summary = "Create user", description = "Returns JWT")
-    public ResponseEntity<?> createUser(@RequestPart String username, @RequestPart String email, @RequestPart String password, @RequestPart String profilePicture) {
+    public ResponseEntity<?> createUser(@RequestPart String username, @RequestPart String email, @RequestPart String password, @RequestPart(value = "profilePicture", required = false) String profilePicture) {
         return userService.createUser(username, email, password, profilePicture);
     }
 

@@ -38,4 +38,10 @@ public class PostController {
         String jwt = authHeader.replace("Bearer ", "");
         return postService.unlikePost(jwt, postUnique);
     }
+
+    @GetMapping("/public/post/getall")
+    @Operation(summary = "Get all posts", description = "Returns post objects by newest")
+    public ResponseEntity<?> getAllPosts() {
+        return postService.getAllPosts();
+    }
 }
