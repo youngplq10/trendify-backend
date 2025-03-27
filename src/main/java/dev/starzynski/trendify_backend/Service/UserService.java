@@ -25,7 +25,15 @@ public class UserService {
     @Autowired
     private AuthenticationManager authManager;
 
-    public ResponseEntity<?> createUser(User user) {
+    public ResponseEntity<?> createUser(String username, String email, String password, String profilePicture) {
+        User user = new User();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(password);
+        if (profilePicture != null) {
+            user.setProfilePicture(profilePicture);
+        }
+
         try {
             Optional<User> existingUsername = userRepository.findByUsername(user.getUsername());
             Optional<User> existingEmail = userRepository.findByEmail(user.getEmail());
@@ -54,8 +62,12 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<?> loginUser(User user) {
+    public ResponseEntity<?> loginUser(String username, String password) {
         try {
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+
             Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );

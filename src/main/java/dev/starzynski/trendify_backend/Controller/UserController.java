@@ -18,14 +18,14 @@ public class UserController {
 
     @PostMapping("/public/user/create")
     @Operation(summary = "Create user", description = "Returns JWT")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public ResponseEntity<?> createUser(@RequestPart String username, @RequestPart String email, @RequestPart String password, @RequestPart String profilePicture) {
+        return userService.createUser(username, email, password, profilePicture);
     }
 
     @Operation(summary = "Login user", description = "Returns JWT")
     @PostMapping("/public/user/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
-        return userService.loginUser(user);
+    public ResponseEntity<?> loginUser(@RequestPart String username, @RequestPart String password) {
+        return userService.loginUser(username, password);
     }
 
     @PostMapping("/auth/user/follow")
