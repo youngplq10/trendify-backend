@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api")
@@ -23,22 +20,22 @@ public class PostController {
 
     @PostMapping("/auth/post/create")
     @Operation(summary = "Create post", description = "Returns post unique param")
-    public ResponseEntity<?> createPost(@RequestPart(value = "image", required = false) String image, @RequestPart String content) {
-        String jwt = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+    public ResponseEntity<?> createPost(@RequestHeader("Authorization") String authHeader, @RequestPart(value = "image", required = false) String image, @RequestPart String content) {
+        String jwt = authHeader.replace("Bearer ", "");
         return postService.createPost(content, image, jwt);
     }
 
     @PostMapping("/auth/post/like")
     @Operation(summary = "Like post", description = "Returns message")
-    public ResponseEntity<?> likePost(@RequestPart String postUnique) {
-        String jwt = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+    public ResponseEntity<?> likePost(@RequestHeader("Authorization") String authHeader, @RequestPart String postUnique) {
+        String jwt = authHeader.replace("Bearer ", "");
         return postService.likePost(jwt, postUnique);
     }
 
     @PostMapping("/auth/post/unlike")
     @Operation(summary = "Unlike post", description = "Returns message")
-    public ResponseEntity<?> unlikePost(@RequestPart String postUnique) {
-        String jwt = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+    public ResponseEntity<?> unlikePost(@RequestHeader("Authorization") String authHeader, @RequestPart String postUnique) {
+        String jwt = authHeader.replace("Bearer ", "");
         return postService.unlikePost(jwt, postUnique);
     }
 }

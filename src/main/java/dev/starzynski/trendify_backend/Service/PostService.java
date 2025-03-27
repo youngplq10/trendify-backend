@@ -53,6 +53,7 @@ public class PostService {
                     .status(HttpStatus.CREATED)
                     .body(Collections.singletonMap("unique", post.getUnique()));
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
