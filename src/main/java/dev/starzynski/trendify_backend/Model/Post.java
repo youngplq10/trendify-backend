@@ -27,7 +27,7 @@ public class Post {
     private List<Reply> replies;
 
     @DBRef
-    @JsonIgnoreProperties
+    @JsonIgnoreProperties({"posts", "followers", "following", "likedPosts", "likedReplies", "replies", "email", "password", "role", "unique", "createdAtDate"})
     private Set<User> likes;
 
     public Post() {
@@ -58,4 +58,8 @@ public class Post {
 
     public List<Reply> getReplies() { return replies; }
     public Set<User> getLikes() { return likes; }
+
+    public Integer getLikeCount() { return likes.size(); }
+
+    public Integer getReplyCount() { return replies.size(); }
 }
