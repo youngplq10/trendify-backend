@@ -19,11 +19,11 @@ public class Post {
     private Date createdAtDate;
 
     @DBRef
-    @JsonIgnoreProperties({"posts", "replies", "followers", "following", "likes"})
+    @JsonIgnoreProperties({"email", "password", "role", "unique", "followers", "following", "likedPosts", "replies", "likedReplies", "id"})
     private User user;
 
     @DBRef
-    @JsonIgnoreProperties("post")
+    @JsonIgnoreProperties({"post", "likes", "id"})
     private List<Reply> replies;
 
     @DBRef

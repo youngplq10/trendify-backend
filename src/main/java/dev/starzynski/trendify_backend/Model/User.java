@@ -25,21 +25,23 @@ public class User {
     private List<Post> posts;
 
     @DBRef
-    @JsonIgnoreProperties({"posts", "replies", "followers", "following", "likes"})
+    @JsonIgnoreProperties({"posts", "likedPosts", "likedReplies", "replies", "followers", "following", "likes", "email", "password", "role", "unique", "id", "newsletter", "createdAtDate"})
     private Set<User> followers;
 
     @DBRef
-    @JsonIgnoreProperties({"posts", "replies", "followers", "following", "likes"})
+    @JsonIgnoreProperties({"posts", "likedPosts", "likedReplies", "replies", "followers", "following", "likes", "email", "password", "role", "unique", "id", "newsletter", "createdAtDate"})
     private Set<User> following;
 
     @DBRef
-    @JsonIgnoreProperties({"replies"})
+    @JsonIgnoreProperties({"id", "replies", "likes"})
     private Set<Post> likedPosts;
 
     @DBRef
+    @JsonIgnoreProperties({"user", "likes", "id"})
     private List<Reply> likedReplies;
 
     @DBRef
+    @JsonIgnoreProperties({"id", "user", "likes"})
     private List<Reply> replies;
 
     public User() {
