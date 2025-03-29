@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +39,12 @@ public class UserController {
     @Operation(summary = "Unfollow user", description = "Returns message")
     public ResponseEntity<?> unfollowUser(@RequestPart String jwt, @RequestPart String targetUsername) {
         return userService.unfollowUser(jwt, targetUsername);
+    }
+
+    @GetMapping("/auth/user")
+    @Operation(summary = "Get user data by jwt", description = "Returns user object")
+    public ResponseEntity<?> getUserData(@RequestHeader("Authorization") String authHeader) {
+        String jwt = authHeader.replace("Bearer ", "");
+        return userService.getUserData(jwt);
     }
 }

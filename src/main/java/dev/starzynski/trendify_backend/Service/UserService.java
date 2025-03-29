@@ -169,4 +169,27 @@ public class UserService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
+
+    public ResponseEntity<?> getUserData(String jwt) {
+        try {
+            String username = jwtService.extractUsername(jwt);
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Failed to get user data. Please try again."));
+            }
+
+            User user = optionalUser.get();
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Collections.singletonMap("data", user));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
 }

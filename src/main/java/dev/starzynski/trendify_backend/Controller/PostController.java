@@ -25,18 +25,18 @@ public class PostController {
         return postService.createPost(content, image, jwt);
     }
 
-    @PostMapping("/auth/post/like")
+    @PostMapping("/auth/post/like/{unique}")
     @Operation(summary = "Like post", description = "Returns message")
-    public ResponseEntity<?> likePost(@RequestHeader("Authorization") String authHeader, @RequestPart String postUnique) {
+    public ResponseEntity<?> likePost(@RequestHeader("Authorization") String authHeader, @PathVariable String unique) {
         String jwt = authHeader.replace("Bearer ", "");
-        return postService.likePost(jwt, postUnique);
+        return postService.likePost(jwt, unique);
     }
 
-    @PostMapping("/auth/post/unlike")
+    @PostMapping("/auth/post/unlike/{unique}")
     @Operation(summary = "Unlike post", description = "Returns message")
-    public ResponseEntity<?> unlikePost(@RequestHeader("Authorization") String authHeader, @RequestPart String postUnique) {
+    public ResponseEntity<?> unlikePost(@RequestHeader("Authorization") String authHeader, @PathVariable String unique) {
         String jwt = authHeader.replace("Bearer ", "");
-        return postService.unlikePost(jwt, postUnique);
+        return postService.unlikePost(jwt, unique);
     }
 
     @GetMapping("/public/post/getall")
@@ -44,4 +44,6 @@ public class PostController {
     public ResponseEntity<?> getAllPosts() {
         return postService.getAllPosts();
     }
+
+
 }
