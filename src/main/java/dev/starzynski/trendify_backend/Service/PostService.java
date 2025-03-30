@@ -156,4 +156,26 @@ public class PostService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
+
+    public ResponseEntity<?> getPostByUnique(String unique) {
+        try {
+            Optional<Post> optionalPost = postRepository.findByUnique(unique);
+
+            if (optionalPost.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "This post doesn't exist."));
+            }
+
+            Post post = optionalPost.get();
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Collections.singletonMap("data", post));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
 }

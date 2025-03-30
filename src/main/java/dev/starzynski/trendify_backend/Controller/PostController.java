@@ -45,5 +45,9 @@ public class PostController {
         return postService.getAllPosts();
     }
 
-
+    @GetMapping("/public/post/{unique}")
+    @Operation(summary = "Get single post by unique", description = "Returns one post object")
+    public ResponseEntity<?> getPostByUnique(@PathVariable String unique) {
+        return postService.getPostByUnique(unique);
+    }
 }
