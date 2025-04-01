@@ -1,6 +1,7 @@
 package dev.starzynski.trendify_backend.Service;
 
 import dev.starzynski.trendify_backend.Model.Post;
+import dev.starzynski.trendify_backend.Model.Reply;
 import dev.starzynski.trendify_backend.Model.User;
 import dev.starzynski.trendify_backend.Repository.PostRepository;
 import dev.starzynski.trendify_backend.Repository.UserRepository;
@@ -168,6 +169,8 @@ public class PostService {
             }
 
             Post post = optionalPost.get();
+
+            post.getReplies().sort(Comparator.comparing(Reply::getCreatedAtDate).reversed());
 
             return ResponseEntity
                     .status(HttpStatus.OK)
