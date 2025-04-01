@@ -21,7 +21,7 @@ public class Reply {
     private Date createdAtDate;
 
     @DBRef
-    @JsonIgnoreProperties({"email", "password", "role", "unique", "followers", "following", "likedPosts", "id", "likedReplies", "replies"})
+    @JsonIgnoreProperties({"email", "password", "role", "unique", "followers", "following", "likedPosts", "id", "likedReplies", "replies", "posts"})
     private User user;
 
     @DBRef
@@ -29,7 +29,7 @@ public class Reply {
     private Post post;
 
     @DBRef
-    @JsonIgnoreProperties({"email", "password", "role", "unique", "followers", "following", "likedPosts", "id", "likedReplies", "replies"})
+    @JsonIgnoreProperties({"email", "password", "role", "unique", "followers", "following", "likedPosts", "id", "likedReplies", "replies", "posts"})
     private Set<User> likes;
 
     public Reply() {
