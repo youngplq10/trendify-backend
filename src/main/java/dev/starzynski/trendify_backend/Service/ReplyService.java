@@ -28,7 +28,7 @@ public class ReplyService {
     @Autowired
     private PostRepository postRepository;
 
-    public ResponseEntity<?> createReply(String postUnique, String jwt, String image, String content) {
+    public ResponseEntity<?> createReply(String postUnique, String jwt, String imageLink, String content) {
         try {
             String username = jwtService.extractUsername(jwt);
 
@@ -48,8 +48,8 @@ public class ReplyService {
             reply.setUser(optionalUser.get());
             reply.setPost(optionalPost.get());
 
-            if (image != null) {
-                reply.setImageLink(image);
+            if (imageLink != null) {
+                reply.setImageLink(imageLink);
             }
 
             replyRepository.insert(reply);

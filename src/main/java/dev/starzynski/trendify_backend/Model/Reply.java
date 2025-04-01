@@ -60,4 +60,6 @@ public class Reply {
     public Date getCreatedAtDate() { return createdAtDate; }
 
     public Set<User> getLikes() { return likes; }
+
+    public Integer getCountLikes() { return likes.size(); }
 }
