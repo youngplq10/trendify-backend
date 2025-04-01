@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -145,6 +146,43 @@ public class ReplyService {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(Collections.singletonMap("message", "Unliked."));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
+
+    public ResponseEntity<?> deleteReply(String jwt, String unique) {
+        try {
+            String username = jwtService.extractUsername(jwt);
+
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+            Optional<Reply> optionalReply = replyRepository.findByUnique(unique);
+
+            if (optionalUser.isEmpty() || optionalReply.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Error in deleting reply. Please try again."));
+            }
+
+            User user = optionalUser.get();
+            Reply reply = optionalReply.get();
+
+            Boolean isTheUserOwner = reply.getUser().getId().equals(user.getId());
+
+            if (!isTheUserOwner) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Error in deleting reply. Please try again."));
+            } else {
+                replyRepository.delete(reply);
+                user.getReplies().removeIf(usersReplies -> Objects.equals(usersReplies.getUnique(), unique));
+
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(Collections.singletonMap("message", "Reply deleted."));
+            }
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)

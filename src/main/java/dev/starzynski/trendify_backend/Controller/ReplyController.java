@@ -35,4 +35,11 @@ public class ReplyController {
         String jwt = authHeader.replace("Bearer ", "");
         return replyService.unlikeReply(jwt, unique);
     }
+
+    @DeleteMapping("/auth/reply/{unique}")
+    @Operation(summary = "Delete reply by unique", description = "Returns message")
+    public ResponseEntity<?> deleteReply(@RequestHeader("Authorization") String authHeader, @PathVariable String unique) {
+        String jwt = authHeader.replace("Bearer ", "");
+        return replyService.deleteReply(jwt, unique);
+    }
 }
