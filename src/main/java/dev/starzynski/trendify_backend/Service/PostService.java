@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -175,6 +172,43 @@ public class PostService {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(Collections.singletonMap("data", post));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
+
+    public ResponseEntity<?> deletePost(String jwt, String unique) {
+        try {
+            String username = jwtService.extractUsername(jwt);
+
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+            Optional<Post> optionalPost = postRepository.findByUnique(unique);
+
+            if (optionalUser.isEmpty() || optionalPost.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Error in deleting post. Please try again."));
+            }
+
+            User user = optionalUser.get();
+            Post post = optionalPost.get();
+
+            Boolean isTheUserOwner = post.getUser().getId().equals(user.getId());
+
+            if (!isTheUserOwner) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Error in deleting post. Please try again."));
+            } else {
+                postRepository.delete(post);
+                user.getPosts().removeIf(usersPosts -> Objects.equals(usersPosts.getUnique(), unique));
+
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(Collections.singletonMap("message", "Post deleted."));
+            }
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
