@@ -47,4 +47,10 @@ public class UserController {
         String jwt = authHeader.replace("Bearer ", "");
         return userService.getUserData(jwt);
     }
+
+    @GetMapping("/public/user/{username}")
+    @Operation(summary = "Get user data by username", description = "Returns user object")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        return userService.getUserByUsername(username);
+    }
 }

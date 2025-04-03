@@ -14,7 +14,7 @@ public class User {
     @Id
     private ObjectId id;
 
-    private String username, email, password, profilePicture, role, unique;
+    private String username, email, password, profilePicture, role, unique, bio;
 
     private Boolean newsletter;
 
@@ -94,4 +94,7 @@ public class User {
     public List<Reply> getLikedReplies() { return likedReplies; }
 
     public String getUnique() { return unique; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
 }
