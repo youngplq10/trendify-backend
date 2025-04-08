@@ -26,4 +26,33 @@ public class ReplyDTO {
         this.postId = reply.getPostId();
         this.likes = reply.getLikes();
     }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getUnique() {
+        return unique;
+    }
+
+    public Date getCreatedAtDate() {
+        return createdAtDate;
+    }
+
+    public ObjectId getUserId() {
+        return userId;
+    }
+
+    public ObjectId getPostId() {
+        return postId;
+    }
+
+    public Set<ObjectId> getLikes() {
+        return likes;
+    }
+
 }

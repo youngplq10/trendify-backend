@@ -38,17 +38,17 @@ public class PostController {
         String jwt = authHeader.replace("Bearer ", "");
         return postService.unlikePost(jwt, unique);
     }
-    /*
-    @GetMapping("/public/post/getall")
-    @Operation(summary = "Get all posts", description = "Returns post objects by newest")
-    public ResponseEntity<?> getAllPosts() {
-        return postService.getAllPosts();
-    }
 
     @GetMapping("/public/post/{unique}")
     @Operation(summary = "Get single post by unique", description = "Returns one post object")
     public ResponseEntity<?> getPostByUnique(@PathVariable String unique) {
         return postService.getPostByUnique(unique);
+    }
+    /*
+    @GetMapping("/public/post/getall")
+    @Operation(summary = "Get all posts", description = "Returns post objects by newest")
+    public ResponseEntity<?> getAllPosts() {
+        return postService.getAllPosts();
     }
 
     @DeleteMapping("/auth/post/{unique}")

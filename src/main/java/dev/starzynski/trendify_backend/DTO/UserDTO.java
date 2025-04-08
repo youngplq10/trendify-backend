@@ -37,4 +37,52 @@ public class UserDTO {
         this.posts = user.getPosts();
         this.replies = user.getReplies();
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public Boolean getNewsletter() {
+        return newsletter;
+    }
+
+    public Date getCreatedAtDate() {
+        return createdAtDate;
+    }
+
+    public Set<ObjectId> getPosts() {
+        return posts;
+    }
+
+    public Set<ObjectId> getReplies() {
+        return replies;
+    }
+
+    public Set<ObjectId> getFollowers() {
+        return followers;
+    }
+
+    public Set<ObjectId> getFollowing() {
+        return following;
+    }
+
+    public Set<ObjectId> getLikedPosts() {
+        return likedPosts;
+    }
+
+    public Set<ObjectId> getLikedReplies() {
+        return likedReplies;
+    }
 }

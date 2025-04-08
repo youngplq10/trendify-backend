@@ -1,9 +1,11 @@
 package dev.starzynski.trendify_backend.Service;
 
+import dev.starzynski.trendify_backend.DTO.PostWithRepliesAndAuthorDTO;
 import dev.starzynski.trendify_backend.Model.Post;
 import dev.starzynski.trendify_backend.Model.Reply;
 import dev.starzynski.trendify_backend.Model.User;
 import dev.starzynski.trendify_backend.Repository.PostRepository;
+import dev.starzynski.trendify_backend.Repository.ReplyRepository;
 import dev.starzynski.trendify_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class PostService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ReplyRepository replyRepository;
 
     @Autowired
     private JWTService jwtService;
@@ -142,18 +147,6 @@ public class PostService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
-    /*
-    public ResponseEntity<?> getAllPosts() {
-        try {
-            return ResponseEntity
-                    .status(200)
-                    .body(Collections.singletonMap("posts", postRepository.findAllByOrderByCreatedAtDateDesc()));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.singletonMap("error", "Server error. Please try again."));
-        }
-    }
 
     public ResponseEntity<?> getPostByUnique(String unique) {
         try {
@@ -167,11 +160,35 @@ public class PostService {
 
             Post post = optionalPost.get();
 
-            post.getReplies().sort(Comparator.comparing(Reply::getCreatedAtDate).reversed());
+            HashSet<Reply> replies = new HashSet<>(replyRepository.findAllById(post.getReplies()));
+
+            Optional<User> optionalUser = userRepository.findById(post.getUserId());
+
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "This post doesn't exist."));
+            }
+
+            User user = optionalUser.get();
+
+            PostWithRepliesAndAuthorDTO postWithRepliesAndAuthorDTO = new PostWithRepliesAndAuthorDTO(post, replies, user);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(Collections.singletonMap("data", post));
+                    .body(Collections.singletonMap("data", postWithRepliesAndAuthorDTO));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Server error. Please try again."));
+        }
+    }
+    /*
+    public ResponseEntity<?> getAllPosts() {
+        try {
+            return ResponseEntity
+                    .status(200)
+                    .body(Collections.singletonMap("posts", postRepository.findAllByOrderByCreatedAtDateDesc()));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
