@@ -29,6 +29,7 @@ public class ReplyService {
     @Autowired
     private PostRepository postRepository;
 
+    /*
     public ResponseEntity<?> createReply(String postUnique, String jwt, String imageLink, String content) {
         try {
             String username = jwtService.extractUsername(jwt);
@@ -188,5 +189,5 @@ public class ReplyService {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
-    }
+    } */
 }

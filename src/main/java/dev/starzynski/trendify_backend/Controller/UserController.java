@@ -17,6 +17,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
     @PostMapping("/public/user/create")
     @Operation(summary = "Create user", description = "Returns JWT")
     public ResponseEntity<?> createUser(@RequestPart String username, @RequestPart String email, @RequestPart String password, @RequestPart(value = "profilePicture", required = false) String profilePicture) {
@@ -42,7 +43,7 @@ public class UserController {
         String jwt = authHeader.replace("Bearer ", "");
         return userService.unfollowUser(jwt, username);
     }
-
+    /*
     @GetMapping("/auth/user")
     @Operation(summary = "Get user data by jwt", description = "Returns user object")
     public ResponseEntity<?> getUserData(@RequestHeader("Authorization") String authHeader) {
@@ -54,5 +55,5 @@ public class UserController {
     @Operation(summary = "Get user data by username", description = "Returns user object")
     public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);
-    }
+    } */
 }

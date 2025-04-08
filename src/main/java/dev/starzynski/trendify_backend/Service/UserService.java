@@ -25,6 +25,7 @@ public class UserService {
     @Autowired
     private AuthenticationManager authManager;
 
+
     public ResponseEntity<?> createUser(String username, String email, String password, String profilePicture) {
         User user = new User();
         user.setUsername(username);
@@ -105,7 +106,7 @@ public class UserService {
             User target = optionalTarget.get();
 
             boolean alreadyFollowing = user.getFollowing().stream()
-                    .anyMatch(followingUser -> followingUser.getUsername().equals(target.getUsername()));
+                    .anyMatch(followingUser -> followingUser.equals(target.getId()));
 
             if (alreadyFollowing) {
                 return ResponseEntity
@@ -113,10 +114,10 @@ public class UserService {
                         .body(Collections.singletonMap("error", "You are already following this user."));
             }
 
-            user.getFollowing().add(target);
+            user.getFollowing().add(target.getId());
             userRepository.save(user);
 
-            target.getFollowers().add(user);
+            target.getFollowers().add(user.getId());
             userRepository.save(target);
 
             return ResponseEntity
@@ -146,7 +147,7 @@ public class UserService {
             User target = optionalTarget.get();
 
             boolean alreadyFollowing = user.getFollowing().stream()
-                    .anyMatch(followingUser -> followingUser.getUsername().equals(target.getUsername()));
+                    .anyMatch(followingUser -> followingUser.equals(target.getId()));
 
             if (!alreadyFollowing) {
                 return ResponseEntity
@@ -154,10 +155,10 @@ public class UserService {
                         .body(Collections.singletonMap("error", "You haven't followed this user yet."));
             }
 
-            user.getFollowing().removeIf(followedUser -> followedUser.getUsername().equals(target.getUsername()));
+            user.getFollowing().removeIf(followedUser -> followedUser.equals(target.getId()));
             userRepository.save(user);
 
-            target.getFollowers().removeIf(followingUser -> followingUser.getUsername().equals(user.getUsername()));
+            target.getFollowers().removeIf(followingUser -> followingUser.equals(user.getId()));
             userRepository.save(target);
 
             return ResponseEntity
@@ -169,7 +170,7 @@ public class UserService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
-
+    /*
     public ResponseEntity<?> getUserData(String jwt) {
         try {
             String username = jwtService.extractUsername(jwt);
@@ -213,5 +214,5 @@ public class UserService {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
-    }
+    } */
 }

@@ -37,7 +37,7 @@ public class PostService {
             }
 
             Post post = new Post();
-            post.setUser(optionalUser.get());
+            post.setUserId(optionalUser.get().getId());
             post.setContent(content);
 
             if (image != null) {
@@ -46,7 +46,7 @@ public class PostService {
 
             postRepository.insert(post);
 
-            optionalUser.get().getPosts().add(post);
+            optionalUser.get().getPosts().add(post.getId());
             userRepository.save(optionalUser.get());
 
             return ResponseEntity
@@ -60,6 +60,7 @@ public class PostService {
         }
     }
 
+    /*
     public ResponseEntity<?> likePost(String jwt, String postUnique) {
         try {
             String username = jwtService.extractUsername(jwt);
@@ -214,5 +215,5 @@ public class PostService {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
-    }
+    } */
 }

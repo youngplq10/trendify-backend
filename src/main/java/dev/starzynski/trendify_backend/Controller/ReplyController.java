@@ -15,6 +15,7 @@ public class ReplyController {
     @Autowired
     private ReplyService replyService;
 
+    /*
     @PostMapping("/auth/reply/create")
     @Operation(summary = "Create reply", description = "Returns reply unique param")
     public ResponseEntity<?> createReply(@RequestPart String postUnique, @RequestHeader("Authorization") String authHeader, @RequestPart(value = "imageLink", required = false) String imageLink, @RequestPart String content) {
@@ -41,5 +42,5 @@ public class ReplyController {
     public ResponseEntity<?> deleteReply(@RequestHeader("Authorization") String authHeader, @PathVariable String unique) {
         String jwt = authHeader.replace("Bearer ", "");
         return replyService.deleteReply(jwt, unique);
-    }
+    } */
 }
