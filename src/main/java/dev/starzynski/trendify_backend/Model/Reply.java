@@ -20,9 +20,9 @@ public class Reply {
 
     private Date createdAtDate;
 
-    private User user;
+    private ObjectId userId;
 
-    private Post post;
+    private ObjectId postId;
 
     private Set<ObjectId> likes;
 
@@ -45,11 +45,11 @@ public class Reply {
 
     public String getUnique() { return unique; }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public ObjectId getUser() { return userId; }
+    public void setUser(ObjectId userId) { this.userId = userId; }
 
-    public Post getPost() { return post; }
-    public void setPost(Post post) { this.post = post; }
+    public ObjectId getPostId() { return postId; }
+    public void setPostId(ObjectId postId) { this.postId = postId; }
 
     public Date getCreatedAtDate() { return createdAtDate; }
 

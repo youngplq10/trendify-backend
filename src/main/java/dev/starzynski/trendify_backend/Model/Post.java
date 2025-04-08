@@ -18,7 +18,7 @@ public class Post {
 
     private Date createdAtDate;
 
-    private User user;
+    private ObjectId userId;
 
     private Set<ObjectId> replies;
 
@@ -47,8 +47,8 @@ public class Post {
 
     public Date getCreatedAtDate() { return createdAtDate; }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public ObjectId getUserId() { return userId; }
+    public void setUserId(ObjectId userId) { this.userId = userId; }
 
     public Set<ObjectId> getReplies() { return replies; }
     public Set<ObjectId> getLikes() { return likes; }

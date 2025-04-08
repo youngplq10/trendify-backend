@@ -20,7 +20,9 @@ public class User {
 
     private Date createdAtDate;
 
-    private List<ObjectId> posts;
+    private Set<ObjectId> posts;
+
+    private Set<ObjectId> replies;
 
     private Set<ObjectId> followers;
 
@@ -30,8 +32,6 @@ public class User {
 
     private Set<ObjectId> likedReplies;
 
-    private Set<ObjectId> replies;
-
     public User() {
         this.id = new ObjectId();
         this.newsletter = false;
@@ -39,7 +39,7 @@ public class User {
         this.createdAtDate = new Date();
         this.followers = new HashSet<>();
         this.following = new HashSet<>();
-        this.posts = new ArrayList<>();
+        this.posts = new HashSet<>();
         this.replies = new HashSet<>();
         this.likedPosts = new HashSet<>();
         this.likedReplies = new HashSet<>();
@@ -73,7 +73,7 @@ public class User {
 
     public Set<ObjectId> getFollowing() { return following; }
 
-    public List<ObjectId> getPosts() { return posts; }
+    public Set<ObjectId> getPosts() { return posts; }
 
     public Set<ObjectId> getReplies() { return replies; }
 
