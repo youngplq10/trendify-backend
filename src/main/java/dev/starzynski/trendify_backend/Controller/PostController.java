@@ -25,7 +25,6 @@ public class PostController {
         return postService.createPost(content, image, jwt);
     }
 
-    /*
     @PostMapping("/auth/post/like/{unique}")
     @Operation(summary = "Like post", description = "Returns message")
     public ResponseEntity<?> likePost(@RequestHeader("Authorization") String authHeader, @PathVariable String unique) {
@@ -39,7 +38,7 @@ public class PostController {
         String jwt = authHeader.replace("Bearer ", "");
         return postService.unlikePost(jwt, unique);
     }
-
+    /*
     @GetMapping("/public/post/getall")
     @Operation(summary = "Get all posts", description = "Returns post objects by newest")
     public ResponseEntity<?> getAllPosts() {

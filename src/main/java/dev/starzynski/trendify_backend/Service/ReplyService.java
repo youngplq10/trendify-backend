@@ -29,7 +29,6 @@ public class ReplyService {
     @Autowired
     private PostRepository postRepository;
 
-    /*
     public ResponseEntity<?> createReply(String postUnique, String jwt, String imageLink, String content) {
         try {
             String username = jwtService.extractUsername(jwt);
@@ -47,8 +46,8 @@ public class ReplyService {
             Reply reply = new Reply();
 
             reply.setContent(content);
-            reply.setUser(optionalUser.get());
-            reply.setPost(optionalPost.get());
+            reply.setUserId(optionalUser.get().getId());
+            reply.setPostId(optionalPost.get().getId());
 
             if (imageLink != null) {
                 reply.setImageLink(imageLink);
@@ -56,10 +55,10 @@ public class ReplyService {
 
             replyRepository.insert(reply);
 
-            optionalUser.get().getReplies().add(reply);
+            optionalUser.get().getReplies().add(reply.getId());
             userRepository.save(optionalUser.get());
 
-            optionalPost.get().getReplies().add(reply);
+            optionalPost.get().getReplies().add(reply.getId());
             postRepository.save(optionalPost.get());
 
             return ResponseEntity
@@ -90,17 +89,17 @@ public class ReplyService {
             Reply reply = optionalReply.get();
 
             boolean alreadyLiked = reply.getLikes().stream()
-                    .anyMatch(likedUser -> likedUser.getId().equals(user.getId()));
+                    .anyMatch(like -> like.equals(user.getId()));
 
             if (alreadyLiked) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Collections.singletonMap("error", "You already liked this reply."));
             }
 
-            reply.getLikes().add(user);
+            reply.getLikes().add(user.getId());
             replyRepository.save(reply);
 
-            user.getLikedReplies().add(reply);
+            user.getLikedReplies().add(reply.getId());
             userRepository.save(user);
 
             return ResponseEntity
@@ -131,17 +130,17 @@ public class ReplyService {
             Reply reply = optionalReply.get();
 
             boolean alreadyLiked = reply.getLikes().stream()
-                    .anyMatch(likedReply -> likedReply.getId().equals(user.getId()));
+                    .anyMatch(like -> like.equals(user.getId()));
 
             if (!alreadyLiked) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Collections.singletonMap("error", "You haven't liked this reply yet."));
             }
 
-            reply.getLikes().removeIf(likedUser -> likedUser.getId().equals(user.getId()));
+            reply.getLikes().removeIf(like -> like.equals(user.getId()));
             replyRepository.save(reply);
 
-            user.getLikedReplies().removeIf(likedReply -> likedReply.getId().equals(reply.getId()));
+            user.getLikedReplies().removeIf(like -> like.equals(reply.getId()));
             userRepository.save(user);
 
             return ResponseEntity
@@ -170,24 +169,38 @@ public class ReplyService {
             User user = optionalUser.get();
             Reply reply = optionalReply.get();
 
-            Boolean isTheUserOwner = reply.getUser().getId().equals(user.getId());
+            Optional<Post> optionalPost = postRepository.findById(reply.getPostId());
+
+            if (optionalPost.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "Error in deleting reply. Please try again."));
+            }
+
+            Post post = optionalPost.get();
+
+            Boolean isTheUserOwner = reply.getUserId().equals(user.getId());
 
             if (!isTheUserOwner) {
                 return ResponseEntity
                         .status(HttpStatus.CONFLICT)
                         .body(Collections.singletonMap("error", "Error in deleting reply. Please try again."));
-            } else {
-                replyRepository.delete(reply);
-                user.getReplies().removeIf(usersReplies -> Objects.equals(usersReplies.getUnique(), unique));
-
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(Collections.singletonMap("message", "Reply deleted."));
             }
+
+            user.getReplies().removeIf(usersReplies -> Objects.equals(usersReplies, reply.getId()));
+            post.getReplies().removeIf(postReplies -> Objects.equals(postReplies, reply.getId()));
+
+            postRepository.save(post);
+            userRepository.save(user);
+            replyRepository.delete(reply);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Collections.singletonMap("message", "Reply deleted."));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
-    } */
+    }
 }

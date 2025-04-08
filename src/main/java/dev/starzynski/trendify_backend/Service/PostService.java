@@ -60,7 +60,6 @@ public class PostService {
         }
     }
 
-    /*
     public ResponseEntity<?> likePost(String jwt, String postUnique) {
         try {
             String username = jwtService.extractUsername(jwt);
@@ -79,17 +78,17 @@ public class PostService {
             Post post = optionalPost.get();
 
             boolean alreadyLiked = post.getLikes().stream()
-                    .anyMatch(likedUser -> likedUser.getId().equals(user.getId()));
+                    .anyMatch(like -> like.equals(user.getId()));
 
             if (alreadyLiked) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Collections.singletonMap("error", "You already liked this post."));
             }
 
-            post.getLikes().add(user);
+            post.getLikes().add(user.getId());
             postRepository.save(post);
 
-            user.getLikedPosts().add(post);
+            user.getLikedPosts().add(post.getId());
             userRepository.save(user);
 
             return ResponseEntity
@@ -120,17 +119,17 @@ public class PostService {
             Post post = optionalPost.get();
 
             boolean alreadyLiked = post.getLikes().stream()
-                    .anyMatch(likedUser -> likedUser.getId().equals(user.getId()));
+                    .anyMatch(like -> like.equals(user.getId()));
 
             if (!alreadyLiked) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Collections.singletonMap("error", "You haven't liked this post yet."));
             }
 
-            post.getLikes().removeIf(likedUser -> likedUser.getId().equals(user.getId()));
+            post.getLikes().removeIf(like -> like.equals(user.getId()));
             postRepository.save(post);
 
-            user.getLikedPosts().removeIf(likedPost -> likedPost.getId().equals(post.getId()));
+            user.getLikedPosts().removeIf(like -> like.equals(post.getId()));
             userRepository.save(user);
 
             return ResponseEntity
@@ -143,7 +142,7 @@ public class PostService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
-
+    /*
     public ResponseEntity<?> getAllPosts() {
         try {
             return ResponseEntity

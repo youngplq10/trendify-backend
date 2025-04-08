@@ -45,8 +45,8 @@ public class Reply {
 
     public String getUnique() { return unique; }
 
-    public ObjectId getUser() { return userId; }
-    public void setUser(ObjectId userId) { this.userId = userId; }
+    public ObjectId getUserId() { return userId; }
+    public void setUserId(ObjectId userId) { this.userId = userId; }
 
     public ObjectId getPostId() { return postId; }
     public void setPostId(ObjectId postId) { this.postId = postId; }

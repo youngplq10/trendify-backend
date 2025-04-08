@@ -22,7 +22,7 @@ public class ReplyDTO {
         this.content = reply.getContent();
         this.unique = reply.getUnique();
         this.createdAtDate = reply.getCreatedAtDate();
-        this.userId = reply.getUser();
+        this.userId = reply.getUserId();
         this.postId = reply.getPostId();
         this.likes = reply.getLikes();
     }
