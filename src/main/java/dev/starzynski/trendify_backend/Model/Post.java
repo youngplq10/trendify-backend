@@ -18,23 +18,17 @@ public class Post {
 
     private Date createdAtDate;
 
-    @DBRef
-    @JsonIgnoreProperties({"email", "password", "role", "unique", "followers", "following", "likedPosts", "replies", "likedReplies", "id"})
     private User user;
 
-    @DBRef
-    @JsonIgnoreProperties({"post", "likes", "id"})
-    private List<Reply> replies;
+    private Set<ObjectId> replies;
 
-    @DBRef
-    @JsonIgnoreProperties({"posts", "followers", "following", "likedPosts", "likedReplies", "replies", "email", "password", "role", "unique", "createdAtDate"})
-    private Set<User> likes;
+    private Set<ObjectId> likes;
 
     public Post() {
         this.id = new ObjectId();
         this.createdAtDate = new Date();
 
-        this.replies = new ArrayList<>();
+        this.replies = new HashSet<>();
         this.likes = new HashSet<>();
 
         GenerateRandomStringService generateRandomStringService = new GenerateRandomStringService();
@@ -56,8 +50,8 @@ public class Post {
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 
-    public List<Reply> getReplies() { return replies; }
-    public Set<User> getLikes() { return likes; }
+    public Set<ObjectId> getReplies() { return replies; }
+    public Set<ObjectId> getLikes() { return likes; }
 
     public Integer getLikeCount() { return likes.size(); }
 

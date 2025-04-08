@@ -20,17 +20,11 @@ public class Reply {
 
     private Date createdAtDate;
 
-    @DBRef
-    @JsonIgnoreProperties({"email", "password", "role", "unique", "followers", "following", "likedPosts", "id", "likedReplies", "replies", "posts"})
     private User user;
 
-    @DBRef
-    @JsonIgnoreProperties({"replies", "likes", "id"})
     private Post post;
 
-    @DBRef
-    @JsonIgnoreProperties({"email", "password", "role", "unique", "followers", "following", "likedPosts", "id", "likedReplies", "replies", "posts"})
-    private Set<User> likes;
+    private Set<ObjectId> likes;
 
     public Reply() {
         this.id = new ObjectId();
@@ -59,7 +53,7 @@ public class Reply {
 
     public Date getCreatedAtDate() { return createdAtDate; }
 
-    public Set<User> getLikes() { return likes; }
+    public Set<ObjectId> getLikes() { return likes; }
 
     public Integer getCountLikes() { return likes.size(); }
 }

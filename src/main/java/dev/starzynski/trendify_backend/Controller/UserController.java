@@ -29,16 +29,18 @@ public class UserController {
         return userService.loginUser(username, password);
     }
 
-    @PostMapping("/auth/user/follow")
+    @PostMapping("/auth/user/follow/{username}")
     @Operation(summary = "Follow user", description = "Returns message")
-    public ResponseEntity<?> followUser(@RequestPart String jwt, @RequestPart String targetUsername) {
-        return userService.followUser(jwt, targetUsername);
+    public ResponseEntity<?> followUser(@RequestHeader("Authorization") String authHeader, @PathVariable String username) {
+        String jwt = authHeader.replace("Bearer ", "");
+        return userService.followUser(jwt, username);
     }
 
-    @PostMapping("/auth/user/unfollow")
+    @PostMapping("/auth/user/unfollow/{username}")
     @Operation(summary = "Unfollow user", description = "Returns message")
-    public ResponseEntity<?> unfollowUser(@RequestPart String jwt, @RequestPart String targetUsername) {
-        return userService.unfollowUser(jwt, targetUsername);
+    public ResponseEntity<?> unfollowUser(@RequestHeader("Authorization") String authHeader, @PathVariable String username) {
+        String jwt = authHeader.replace("Bearer ", "");
+        return userService.unfollowUser(jwt, username);
     }
 
     @GetMapping("/auth/user")

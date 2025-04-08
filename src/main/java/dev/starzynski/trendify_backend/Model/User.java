@@ -20,29 +20,17 @@ public class User {
 
     private Date createdAtDate;
 
-    @DBRef
-    @JsonIgnoreProperties("user")
-    private List<Post> posts;
+    private List<ObjectId> posts;
 
-    @DBRef
-    @JsonIgnoreProperties({"posts", "likedPosts", "likedReplies", "replies", "followers", "following", "likes", "email", "password", "role", "unique", "id", "newsletter", "createdAtDate"})
-    private Set<User> followers;
+    private Set<ObjectId> followers;
 
-    @DBRef
-    @JsonIgnoreProperties({"posts", "likedPosts", "likedReplies", "replies", "followers", "following", "likes", "email", "password", "role", "unique", "id", "newsletter", "createdAtDate"})
-    private Set<User> following;
+    private Set<ObjectId> following;
 
-    @DBRef
-    @JsonIgnoreProperties({"id", "replies", "likes"})
-    private Set<Post> likedPosts;
+    private Set<ObjectId> likedPosts;
 
-    @DBRef
-    @JsonIgnoreProperties({"user", "likes", "id"})
-    private List<Reply> likedReplies;
+    private Set<ObjectId> likedReplies;
 
-    @DBRef
-    @JsonIgnoreProperties({"id", "user", "likes"})
-    private List<Reply> replies;
+    private Set<ObjectId> replies;
 
     public User() {
         this.id = new ObjectId();
@@ -52,9 +40,9 @@ public class User {
         this.followers = new HashSet<>();
         this.following = new HashSet<>();
         this.posts = new ArrayList<>();
-        this.replies = new ArrayList<>();
+        this.replies = new HashSet<>();
         this.likedPosts = new HashSet<>();
-        this.likedReplies = new ArrayList<>();
+        this.likedReplies = new HashSet<>();
 
         GenerateRandomStringService generateRandomStringService = new GenerateRandomStringService();
         this.unique = generateRandomStringService.generateRandom(15);
@@ -81,17 +69,17 @@ public class User {
 
     public Date getCreatedAtDate() { return createdAtDate; }
 
-    public Set<User> getFollowers() { return followers; }
+    public Set<ObjectId> getFollowers() { return followers; }
 
-    public Set<User> getFollowing() { return following; }
+    public Set<ObjectId> getFollowing() { return following; }
 
-    public List<Post> getPosts() { return posts; }
+    public List<ObjectId> getPosts() { return posts; }
 
-    public List<Reply> getReplies() { return replies; }
+    public Set<ObjectId> getReplies() { return replies; }
 
-    public Set<Post> getLikedPosts() { return likedPosts; }
+    public Set<ObjectId> getLikedPosts() { return likedPosts; }
 
-    public List<Reply> getLikedReplies() { return likedReplies; }
+    public Set<ObjectId> getLikedReplies() { return likedReplies; }
 
     public String getUnique() { return unique; }
 
