@@ -172,7 +172,7 @@ public class PostService {
 
             User user = optionalUser.get();
 
-            PostWithRepliesAndAuthorDTO postWithRepliesAndAuthorDTO = new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository, postRepository);
+            PostWithRepliesAndAuthorDTO postWithRepliesAndAuthorDTO = new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository, postRepository, replyRepository);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -197,7 +197,7 @@ public class PostService {
 
                         User user = optionalUser.get();
 
-                        return new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository, postRepository);
+                        return new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository, postRepository, replyRepository);
                     })
                     .filter(Objects::nonNull)
                     .toList();

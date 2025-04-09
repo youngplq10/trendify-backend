@@ -43,14 +43,14 @@ public class UserController {
         String jwt = authHeader.replace("Bearer ", "");
         return userService.unfollowUser(jwt, username);
     }
-    /*
+
     @GetMapping("/auth/user")
     @Operation(summary = "Get user data by jwt", description = "Returns user object")
     public ResponseEntity<?> getUserData(@RequestHeader("Authorization") String authHeader) {
         String jwt = authHeader.replace("Bearer ", "");
         return userService.getUserData(jwt);
     }
-
+    /*
     @GetMapping("/public/user/{username}")
     @Operation(summary = "Get user data by username", description = "Returns user object")
     public ResponseEntity<?> getUserByUsername(@PathVariable String username) {

@@ -1,7 +1,9 @@
 package dev.starzynski.trendify_backend.DTO;
 
+import dev.starzynski.trendify_backend.Model.Reply;
 import dev.starzynski.trendify_backend.Model.User;
 import dev.starzynski.trendify_backend.Repository.PostRepository;
+import dev.starzynski.trendify_backend.Repository.ReplyRepository;
 import dev.starzynski.trendify_backend.Repository.UserRepository;
 import org.bson.types.ObjectId;
 
@@ -19,13 +21,13 @@ public class UserDTO {
 
     private Set<PostDTO> posts;
 
-    private Set<ObjectId> replies;
+    private Set<ReplyDTOWithoutLikesAndUser> replies;
 
     private Set<PostDTO> likedPosts;
 
-    private Set<ObjectId> likedReplies;
+    private Set<ReplyDTOWithoutLikesAndUser> likedReplies;
 
-    public UserDTO(User user, PostRepository postRepository) {
+    public UserDTO(User user, PostRepository postRepository, ReplyRepository replyRepository, UserRepository userRepository) {
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.profilePicture = user.getProfilePicture();
@@ -45,7 +47,17 @@ public class UserDTO {
                 .map(post -> new PostDTO(post.get()))
                 .collect(Collectors.toSet());
 
-        this.replies = user.getReplies();
+        this.replies = user.getReplies().stream()
+                .map(replyRepository::findById)
+                .filter(Optional::isPresent)
+                .map(reply -> new ReplyDTOWithoutLikesAndUser(reply.get()))
+                .collect(Collectors.toSet());
+
+        this.likedReplies = user.getLikedReplies().stream()
+                .map(replyRepository::findById)
+                .filter(Optional::isPresent)
+                .map(reply -> new ReplyDTOWithoutLikesAndUser(reply.get()))
+                .collect(Collectors.toSet());
     }
 
     public String getUsername() {
@@ -76,7 +88,7 @@ public class UserDTO {
         return posts;
     }
 
-    public Set<ObjectId> getReplies() {
+    public Set<ReplyDTOWithoutLikesAndUser> getReplies() {
         return replies;
     }
 
@@ -84,7 +96,7 @@ public class UserDTO {
         return likedPosts;
     }
 
-    public Set<ObjectId> getLikedReplies() {
+    public Set<ReplyDTOWithoutLikesAndUser> getLikedReplies() {
         return likedReplies;
     }
 }

@@ -4,6 +4,7 @@ import dev.starzynski.trendify_backend.Model.Post;
 import dev.starzynski.trendify_backend.Model.Reply;
 import dev.starzynski.trendify_backend.Model.User;
 import dev.starzynski.trendify_backend.Repository.PostRepository;
+import dev.starzynski.trendify_backend.Repository.ReplyRepository;
 import dev.starzynski.trendify_backend.Repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class ReplyDTO {
 
     private Set<UserDTO> likes;
 
-    public ReplyDTO(Reply reply, UserRepository userRepository, PostRepository postRepository) {
+    public ReplyDTO(Reply reply, UserRepository userRepository, PostRepository postRepository, ReplyRepository replyRepository) {
         this.imageLink = reply.getImageLink();
         this.content = reply.getContent();
         this.unique = reply.getUnique();
@@ -30,12 +31,12 @@ public class ReplyDTO {
 
         Optional<User> optionalUser  = userRepository.findById(reply.getUserId());
 
-        optionalUser.ifPresent(value -> this.user = new UserDTO(value, postRepository));
+        optionalUser.ifPresent(value -> this.user = new UserDTO(value, postRepository, replyRepository, userRepository));
 
         this.likes = reply.getLikes().stream()
                 .map(userRepository::findById)
                 .filter(Optional::isPresent)
-                .map(opt -> new UserDTO(opt.get(), postRepository))
+                .map(opt -> new UserDTO(opt.get(), postRepository, replyRepository, userRepository))
                 .collect(Collectors.toSet());
     }
 

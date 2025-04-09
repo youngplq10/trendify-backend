@@ -1,6 +1,9 @@
 package dev.starzynski.trendify_backend.Service;
 
+import dev.starzynski.trendify_backend.DTO.UserDTO;
 import dev.starzynski.trendify_backend.Model.User;
+import dev.starzynski.trendify_backend.Repository.PostRepository;
+import dev.starzynski.trendify_backend.Repository.ReplyRepository;
 import dev.starzynski.trendify_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,12 @@ public class UserService {
 
     @Autowired
     private AuthenticationManager authManager;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private ReplyRepository replyRepository;
 
 
     public ResponseEntity<?> createUser(String username, String email, String password, String profilePicture) {
@@ -170,7 +179,7 @@ public class UserService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
-    /*
+
     public ResponseEntity<?> getUserData(String jwt) {
         try {
             String username = jwtService.extractUsername(jwt);
@@ -182,7 +191,7 @@ public class UserService {
                         .body(Collections.singletonMap("error", "Failed to get user data. Please try again."));
             }
 
-            User user = optionalUser.get();
+            UserDTO user = new UserDTO(optionalUser.get(), postRepository, replyRepository, userRepository);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -194,6 +203,7 @@ public class UserService {
         }
     }
 
+    /*
     public ResponseEntity<?> getUserByUsername(String username) {
         try {
             Optional<User> optionalUser = userRepository.findByUsername(username);

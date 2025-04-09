@@ -4,6 +4,7 @@ import dev.starzynski.trendify_backend.Model.Post;
 import dev.starzynski.trendify_backend.Model.Reply;
 import dev.starzynski.trendify_backend.Model.User;
 import dev.starzynski.trendify_backend.Repository.PostRepository;
+import dev.starzynski.trendify_backend.Repository.ReplyRepository;
 import dev.starzynski.trendify_backend.Repository.UserRepository;
 
 import java.util.Date;
@@ -20,20 +21,20 @@ public class PostWithRepliesAndAuthorDTO {
     private UserDTO user;
     private Integer countLikes;
 
-    public PostWithRepliesAndAuthorDTO(Post post, Set<Reply> replies, User user, UserRepository userRepository, PostRepository postRepository) {
+    public PostWithRepliesAndAuthorDTO(Post post, Set<Reply> replies, User user, UserRepository userRepository, PostRepository postRepository, ReplyRepository replyRepository) {
         this.unique = post.getUnique();
         this.content = post.getContent();
         this.createdAtDate = post.getCreatedAtDate();
         this.replies = replies
                 .stream()
-                .map(reply -> new ReplyDTO(reply, userRepository, postRepository))
+                .map(reply -> new ReplyDTO(reply, userRepository, postRepository, replyRepository))
                 .collect(Collectors.toSet());
-        this.user = new UserDTO(user, postRepository);
+        this.user = new UserDTO(user, postRepository, replyRepository, userRepository);
         this.countLikes = post.getLikes().size();
         this.likes = post.getLikes().stream()
                 .map(userRepository::findById)
                 .filter(Optional::isPresent)
-                .map(opt -> new UserDTO(opt.get(), postRepository))
+                .map(opt -> new UserDTO(opt.get(), postRepository, replyRepository, userRepository))
                 .collect(Collectors.toSet());
     }
 
