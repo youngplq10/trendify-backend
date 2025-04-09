@@ -44,13 +44,13 @@ public class PostController {
     public ResponseEntity<?> getPostByUnique(@PathVariable String unique) {
         return postService.getPostByUnique(unique);
     }
-    /*
+
     @GetMapping("/public/post/getall")
     @Operation(summary = "Get all posts", description = "Returns post objects by newest")
     public ResponseEntity<?> getAllPosts() {
         return postService.getAllPosts();
     }
-
+    /*
     @DeleteMapping("/auth/post/{unique}")
     @Operation(summary = "Delete post by unique", description = "Returns message")
     public ResponseEntity<?> deletePost(@RequestHeader("Authorization") String authHeader, @PathVariable String unique) {

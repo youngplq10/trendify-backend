@@ -172,7 +172,7 @@ public class PostService {
 
             User user = optionalUser.get();
 
-            PostWithRepliesAndAuthorDTO postWithRepliesAndAuthorDTO = new PostWithRepliesAndAuthorDTO(post, replies, user);
+            PostWithRepliesAndAuthorDTO postWithRepliesAndAuthorDTO = new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -183,19 +183,37 @@ public class PostService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
-    /*
+
     public ResponseEntity<?> getAllPosts() {
         try {
+            List<Post> posts = postRepository.findAllByOrderByCreatedAtDateDesc();
+
+            List<PostWithRepliesAndAuthorDTO> postDTOs = posts.stream().map(post -> {
+                        // Get replies
+                        Set<Reply> replies = new HashSet<>(replyRepository.findAllById(post.getReplies()));
+
+                        // Get author
+                        Optional<User> optionalUser = userRepository.findById(post.getUserId());
+                        if (optionalUser.isEmpty()) return null;
+
+                        User user = optionalUser.get();
+
+                        // Convert to DTO
+                        return new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository);
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+
             return ResponseEntity
-                    .status(200)
-                    .body(Collections.singletonMap("posts", postRepository.findAllByOrderByCreatedAtDateDesc()));
+                    .status(HttpStatus.OK)
+                    .body(Collections.singletonMap("posts", postDTOs));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
-
+    /*
     public ResponseEntity<?> deletePost(String jwt, String unique) {
         try {
             String username = jwtService.extractUsername(jwt);

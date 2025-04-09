@@ -1,9 +1,15 @@
 package dev.starzynski.trendify_backend.DTO;
 
+import dev.starzynski.trendify_backend.Model.Post;
 import dev.starzynski.trendify_backend.Model.Reply;
+import dev.starzynski.trendify_backend.Model.User;
+import dev.starzynski.trendify_backend.Repository.PostRepository;
+import dev.starzynski.trendify_backend.Repository.UserRepository;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 public class ReplyDTO {
@@ -11,19 +17,20 @@ public class ReplyDTO {
 
     private Date createdAtDate;
 
-    private ObjectId userId;
-
-    private ObjectId postId;
+    private UserDTO user;
 
     private Set<ObjectId> likes;
 
-    public ReplyDTO(Reply reply) {
+    public ReplyDTO(Reply reply, UserRepository userRepository) {
         this.imageLink = reply.getImageLink();
         this.content = reply.getContent();
         this.unique = reply.getUnique();
         this.createdAtDate = reply.getCreatedAtDate();
-        this.userId = reply.getUserId();
-        this.postId = reply.getPostId();
+
+        Optional<User> optionalUser  = userRepository.findById(reply.getUserId());
+
+        optionalUser.ifPresent(value -> this.user = new UserDTO(value));
+
         this.likes = reply.getLikes();
     }
 
@@ -43,12 +50,8 @@ public class ReplyDTO {
         return createdAtDate;
     }
 
-    public ObjectId getUserId() {
-        return userId;
-    }
-
-    public ObjectId getPostId() {
-        return postId;
+    public UserDTO getUser() {
+        return user;
     }
 
     public Set<ObjectId> getLikes() {
