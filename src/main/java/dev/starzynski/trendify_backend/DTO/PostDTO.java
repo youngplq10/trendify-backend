@@ -26,4 +26,36 @@ public class PostDTO {
         this.replies = post.getReplies();
         this.likes = post.getLikes();
     }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getUnique() {
+        return unique;
+    }
+
+    public Date getCreatedAtDate() {
+        return createdAtDate;
+    }
+
+    public ObjectId getUserId() {
+        return userId;
+    }
+
+    public Set<ObjectId> getReplies() {
+        return replies;
+    }
+
+    public Set<ObjectId> getLikes() {
+        return likes;
+    }
+
+    public Integer getCountLikes() { return likes.size(); }
+
+    public Integer getCountReplies() { return replies.size(); }
 }

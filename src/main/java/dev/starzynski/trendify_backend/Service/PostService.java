@@ -172,7 +172,7 @@ public class PostService {
 
             User user = optionalUser.get();
 
-            PostWithRepliesAndAuthorDTO postWithRepliesAndAuthorDTO = new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository);
+            PostWithRepliesAndAuthorDTO postWithRepliesAndAuthorDTO = new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository, postRepository);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -189,17 +189,15 @@ public class PostService {
             List<Post> posts = postRepository.findAllByOrderByCreatedAtDateDesc();
 
             List<PostWithRepliesAndAuthorDTO> postDTOs = posts.stream().map(post -> {
-                        // Get replies
+
                         Set<Reply> replies = new HashSet<>(replyRepository.findAllById(post.getReplies()));
 
-                        // Get author
                         Optional<User> optionalUser = userRepository.findById(post.getUserId());
                         if (optionalUser.isEmpty()) return null;
 
                         User user = optionalUser.get();
 
-                        // Convert to DTO
-                        return new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository);
+                        return new PostWithRepliesAndAuthorDTO(post, replies, user, userRepository, postRepository);
                     })
                     .filter(Objects::nonNull)
                     .toList();

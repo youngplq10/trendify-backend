@@ -1,10 +1,14 @@
 package dev.starzynski.trendify_backend.DTO;
 
 import dev.starzynski.trendify_backend.Model.User;
+import dev.starzynski.trendify_backend.Repository.PostRepository;
+import dev.starzynski.trendify_backend.Repository.UserRepository;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserDTO {
     private String username, email, profilePicture, bio;
@@ -13,28 +17,34 @@ public class UserDTO {
 
     private Date createdAtDate;
 
-    private Set<ObjectId> posts;
+    private Set<PostDTO> posts;
 
     private Set<ObjectId> replies;
 
-    private Set<ObjectId> followers;
-
-    private Set<ObjectId> following;
-
-    private Set<ObjectId> likedPosts;
+    private Set<PostDTO> likedPosts;
 
     private Set<ObjectId> likedReplies;
 
-    public UserDTO(User user) {
+    public UserDTO(User user, PostRepository postRepository) {
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.profilePicture = user.getProfilePicture();
         this.bio = user.getBio();
         this.newsletter = user.getNewsletter();
         this.createdAtDate = user.getCreatedAtDate();
-        this.followers = user.getFollowers();
-        this.following = user.getFollowing();
-        this.posts = user.getPosts();
+
+        this.posts = user.getPosts().stream()
+                .map(postRepository::findById)
+                .filter(Optional::isPresent)
+                .map(post -> new PostDTO(post.get()))
+                .collect(Collectors.toSet());
+
+        this.likedPosts = user.getLikedPosts().stream()
+                .map(postRepository::findById)
+                .filter(Optional::isPresent)
+                .map(post -> new PostDTO(post.get()))
+                .collect(Collectors.toSet());
+
         this.replies = user.getReplies();
     }
 
@@ -62,7 +72,7 @@ public class UserDTO {
         return createdAtDate;
     }
 
-    public Set<ObjectId> getPosts() {
+    public Set<PostDTO> getPosts() {
         return posts;
     }
 
@@ -70,15 +80,7 @@ public class UserDTO {
         return replies;
     }
 
-    public Set<ObjectId> getFollowers() {
-        return followers;
-    }
-
-    public Set<ObjectId> getFollowing() {
-        return following;
-    }
-
-    public Set<ObjectId> getLikedPosts() {
+    public Set<PostDTO> getLikedPosts() {
         return likedPosts;
     }
 

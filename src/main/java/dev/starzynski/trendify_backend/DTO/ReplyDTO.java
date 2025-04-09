@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ReplyDTO {
     private String imageLink, content, unique;
@@ -19,9 +20,9 @@ public class ReplyDTO {
 
     private UserDTO user;
 
-    private Set<ObjectId> likes;
+    private Set<UserDTO> likes;
 
-    public ReplyDTO(Reply reply, UserRepository userRepository) {
+    public ReplyDTO(Reply reply, UserRepository userRepository, PostRepository postRepository) {
         this.imageLink = reply.getImageLink();
         this.content = reply.getContent();
         this.unique = reply.getUnique();
@@ -29,9 +30,13 @@ public class ReplyDTO {
 
         Optional<User> optionalUser  = userRepository.findById(reply.getUserId());
 
-        optionalUser.ifPresent(value -> this.user = new UserDTO(value));
+        optionalUser.ifPresent(value -> this.user = new UserDTO(value, postRepository));
 
-        this.likes = reply.getLikes();
+        this.likes = reply.getLikes().stream()
+                .map(userRepository::findById)
+                .filter(Optional::isPresent)
+                .map(opt -> new UserDTO(opt.get(), postRepository))
+                .collect(Collectors.toSet());
     }
 
     public String getImageLink() {
@@ -54,8 +59,9 @@ public class ReplyDTO {
         return user;
     }
 
-    public Set<ObjectId> getLikes() {
+    public Set<UserDTO> getLikes() {
         return likes;
     }
 
+    public Integer getCountLikes() { return likes.size(); }
 }
