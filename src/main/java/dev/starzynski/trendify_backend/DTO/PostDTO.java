@@ -55,7 +55,7 @@ public class PostDTO {
         return likes;
     }
 
-    public Integer getCountLikes() { return likes.size(); }
+    public Integer getLikeCount() { return likes.size(); }
 
-    public Integer getCountReplies() { return replies.size(); }
+    public Integer getReplyCount() { return replies.size(); }
 }

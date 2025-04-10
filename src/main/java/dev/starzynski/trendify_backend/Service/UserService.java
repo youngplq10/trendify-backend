@@ -203,7 +203,6 @@ public class UserService {
         }
     }
 
-    /*
     public ResponseEntity<?> getUserByUsername(String username) {
         try {
             Optional<User> optionalUser = userRepository.findByUsername(username);
@@ -214,15 +213,15 @@ public class UserService {
                         .body(Collections.singletonMap("error", "This user doesn't exist."));
             }
 
-            User user = optionalUser.get();
+            UserDTO userDTO = new UserDTO(optionalUser.get(), postRepository, replyRepository, userRepository);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(Collections.singletonMap("data", user));
+                    .body(Collections.singletonMap("data", userDTO));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
-    } */
+    }
 }

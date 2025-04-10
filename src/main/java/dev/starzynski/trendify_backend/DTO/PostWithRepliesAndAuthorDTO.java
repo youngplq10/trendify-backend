@@ -19,7 +19,6 @@ public class PostWithRepliesAndAuthorDTO {
     private Set<ReplyDTO> replies;
     private Set<UserDTO> likes;
     private UserDTO user;
-    private Integer countLikes;
 
     public PostWithRepliesAndAuthorDTO(Post post, Set<Reply> replies, User user, UserRepository userRepository, PostRepository postRepository, ReplyRepository replyRepository) {
         this.unique = post.getUnique();
@@ -30,7 +29,7 @@ public class PostWithRepliesAndAuthorDTO {
                 .map(reply -> new ReplyDTO(reply, userRepository, postRepository, replyRepository))
                 .collect(Collectors.toSet());
         this.user = new UserDTO(user, postRepository, replyRepository, userRepository);
-        this.countLikes = post.getLikes().size();
+
         this.likes = post.getLikes().stream()
                 .map(userRepository::findById)
                 .filter(Optional::isPresent)
@@ -63,5 +62,5 @@ public class PostWithRepliesAndAuthorDTO {
     }
 
     public Integer getReplyCount() { return replies.size(); }
-    public Integer getLikeCount() { return countLikes; }
+    public Integer getLikeCount() { return likes.size(); }
 }
