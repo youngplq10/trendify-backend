@@ -211,7 +211,7 @@ public class PostService {
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
     }
-    /*
+
     public ResponseEntity<?> deletePost(String jwt, String unique) {
         try {
             String username = jwtService.extractUsername(jwt);
@@ -228,15 +228,16 @@ public class PostService {
             User user = optionalUser.get();
             Post post = optionalPost.get();
 
-            Boolean isTheUserOwner = post.getUser().getId().equals(user.getId());
+            Boolean isTheUserOwner = post.getUserId().equals(user.getId());
 
             if (!isTheUserOwner) {
                 return ResponseEntity
                         .status(HttpStatus.CONFLICT)
                         .body(Collections.singletonMap("error", "Error in deleting post. Please try again."));
             } else {
+                user.getPosts().removeIf(usersPost -> Objects.equals(usersPost, post.getId()));
                 postRepository.delete(post);
-                user.getPosts().removeIf(usersPosts -> Objects.equals(usersPosts.getUnique(), unique));
+                userRepository.save(user);
 
                 return ResponseEntity
                         .status(HttpStatus.OK)
@@ -247,5 +248,5 @@ public class PostService {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("error", "Server error. Please try again."));
         }
-    } */
+    }
 }

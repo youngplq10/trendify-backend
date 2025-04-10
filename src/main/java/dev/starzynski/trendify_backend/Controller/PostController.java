@@ -50,11 +50,11 @@ public class PostController {
     public ResponseEntity<?> getAllPosts() {
         return postService.getAllPosts();
     }
-    /*
+
     @DeleteMapping("/auth/post/{unique}")
     @Operation(summary = "Delete post by unique", description = "Returns message")
     public ResponseEntity<?> deletePost(@RequestHeader("Authorization") String authHeader, @PathVariable String unique) {
         String jwt = authHeader.replace("Bearer ", "");
         return postService.deletePost(jwt, unique);
-    } */
+    }
 }
