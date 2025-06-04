@@ -19,11 +19,13 @@ public class PostWithRepliesAndAuthorDTO {
     private Set<ReplyDTO> replies;
     private Set<UserDTO> likes;
     private UserDTO user;
+    private String imageLink;
 
     public PostWithRepliesAndAuthorDTO(Post post, Set<Reply> replies, User user, UserRepository userRepository, PostRepository postRepository, ReplyRepository replyRepository) {
         this.unique = post.getUnique();
         this.content = post.getContent();
         this.createdAtDate = post.getCreatedAtDate();
+        this.imageLink = post.getImageLink();
         this.replies = replies
                 .stream()
                 .map(reply -> new ReplyDTO(reply, userRepository, postRepository, replyRepository))
@@ -63,4 +65,6 @@ public class PostWithRepliesAndAuthorDTO {
 
     public Integer getReplyCount() { return replies.size(); }
     public Integer getLikeCount() { return likes.size(); }
+
+    public String getImageLink() { return imageLink; }
 }
